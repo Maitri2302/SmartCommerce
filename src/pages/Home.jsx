@@ -4,6 +4,7 @@ import FeaturedProducts from "../components/FeaturedProducts";
 import CompareProducts from "../components/CompareProducts";
 import AiAssistant from "../components/AiAssistant";
 import QuickView from "../components/QuickView";
+import Footer from "../components/Footer";
 
 function Home({
   addToCart,
@@ -45,6 +46,8 @@ function Home({
         close={() => setSelectedProduct(null)}
         addToCart={addToCart}
       />
+
+      <Footer />
     </>
   );
 }
