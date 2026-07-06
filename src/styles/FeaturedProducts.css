@@ -1,0 +1,19 @@
+.featured {
+  padding: 70px;
+}
+
+.featured h1 {
+  margin-bottom: 40px;
+
+  text-align: center;
+}
+
+.products-grid {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 30px;
+
+  flex-wrap: wrap;
+}

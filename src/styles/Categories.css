@@ -1,0 +1,32 @@
+.categories{
+padding:50px 10%;
+text-align:center;
+}
+
+.category-list{
+display:flex;
+justify-content:center;
+gap:15px;
+flex-wrap:wrap;
+margin-top:25px;
+}
+
+.category-list button{
+padding:12px 24px;
+border:none;
+border-radius:30px;
+cursor:pointer;
+background:#f3f4f6;
+transition:.3s;
+font-size:16px;
+}
+
+.category-list button:hover{
+background:#2563eb;
+color:white;
+}
+
+.category-list .active{
+background:#2563eb;
+color:white;
+}

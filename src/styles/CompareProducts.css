@@ -1,0 +1,38 @@
+.compare-section {
+  margin: 60px auto;
+  width: 90%;
+  max-width: 900px;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.compare-section h2 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.compare-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.compare-section th,
+.compare-section td {
+  border: 1px solid #ddd;
+  padding: 14px;
+  text-align: center;
+}
+
+.compare-section th {
+  background: #2563eb;
+  color: white;
+}
+
+.ai-verdict {
+  margin-top: 25px;
+  background: #eef6ff;
+  padding: 20px;
+  border-radius: 12px;
+}
