@@ -1,0 +1,48 @@
+.checkout-page{
+    padding:40px;
+}
+
+.checkout-container{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:40px;
+}
+
+.shipping-form{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.shipping-form input,
+.shipping-form textarea,
+.shipping-form select{
+    padding:14px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:16px;
+}
+
+.order-summary{
+    background:#fff;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.summary-item{
+    display:flex;
+    justify-content:space-between;
+    margin:15px 0;
+}
+
+.order-summary button{
+    width:100%;
+    margin-top:20px;
+    padding:14px;
+    border:none;
+    background:#2563eb;
+    color:white;
+    border-radius:10px;
+    cursor:pointer;
+}

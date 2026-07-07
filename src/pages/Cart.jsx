@@ -1,4 +1,5 @@
 import "../styles/Cart.css";
+import { useNavigate } from "react-router-dom";
 
 function Cart({
   cartItems,
@@ -14,6 +15,7 @@ function Cart({
   const shipping = subtotal > 0 ? 99 : 0;
   const gst = Math.round(subtotal * 0.18);
   const total = subtotal + shipping + gst;
+  const navigate = useNavigate();
 
   if (cartItems.length === 0) {
     return (
@@ -85,7 +87,12 @@ function Cart({
             <span>₹{total}</span>
           </h3>
 
-          <button className="checkout-btn">Proceed to Checkout</button>
+          <button
+            className="checkout-btn"
+            onClick={() => navigate("/checkout")}
+          >
+            Proceed to Checkout
+          </button>
         </div>
       </div>
     </div>

@@ -12,6 +12,8 @@ import Profile from "./pages/Profile";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import ProductDetails from "./pages/ProductDetails";
+import Checkout from "./pages/Checkout";
+import OrderSuccess from "./pages/OrderSuccess";
 
 function App() {
   const [products, setProducts] = useState(productsData);
@@ -194,6 +196,14 @@ function App() {
             />
           }
         />
+        <Route
+          path="/checkout"
+          element={
+            <Checkout cartItems={cartItems} setCartItems={setCartItems} />
+          }
+        />
+
+        <Route path="/order-success" element={<OrderSuccess />} />
       </Routes>
     </BrowserRouter>
   );

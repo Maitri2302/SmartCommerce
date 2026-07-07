@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom";
 import "../styles/ProductDetails.css";
 import CustomerReviews from "../components/CustomerReviews";
 import { useState } from "react";
+import ProductSpecifications from "../components/ProductSpecifications";
+import RelatedProducts from "../components/RelatedProducts";
 
 function ProductDetails({ products, addToCart, toggleWishlist }) {
   const { id } = useParams();
@@ -78,8 +80,9 @@ function ProductDetails({ products, addToCart, toggleWishlist }) {
           </div>
         </div>
       </div>
-
+      <ProductSpecifications specifications={product.specifications} />
       <CustomerReviews />
+      <RelatedProducts products={products} currentProduct={product} />
     </div>
   );
 }
