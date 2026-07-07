@@ -1,35 +1,35 @@
 import "../styles/Hero.css";
+import heroImg from "../assets/hero.jpeg";
 
 function Hero({ openAI }) {
   return (
     <section className="hero">
-
       <div className="hero-left">
-
-        <h1>
-          Shop Smarter with Artificial Intelligence
-        </h1>
+        <h1>The Future of Online Shopping Starts Here.</h1>
 
         <p>
-          Discover products with intelligent recommendations,
-          compare items, and experience the future of shopping.
+          Experience AI-powered shopping with personalized recommendations,
+          smart comparisons, instant search, and intelligent product discovery.
         </p>
 
-        <button onClick={openAI}>
-          🤖 Ask AI Assistant
-        </button>
+        <div className="hero-buttons">
+          <button
+            onClick={() =>
+              document
+                .getElementById("products")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+          >
+            Explore Products
+          </button>
 
+          <button onClick={openAI}>🤖 Ask AI</button>
+        </div>
       </div>
 
       <div className="hero-right">
-
-        <img
-          src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"
-          alt="shopping"
-        />
-
+        <img src={heroImg} alt="SmartCommerce Hero" />
       </div>
-
     </section>
   );
 }

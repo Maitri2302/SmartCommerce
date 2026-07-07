@@ -10,8 +10,25 @@ const products = [
     reviews: 245,
     ai: true,
     favorite: false,
-    image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700",
+      "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=700",
+      "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?w=700",
+      "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=700",
+    ],
+    specifications: {
+    Brand: "Sony",
+    Model: "WH-1000XM5",
+    Color: "Black",
+    Battery: "30 Hours",
+    Bluetooth: "5.3",
+    Weight: "250 g",
+    Driver: "30 mm",
+    Microphone: "Built-in",
+    NoiseCancellation: "Active",
+    Charging: "USB Type-C",
+    Warranty: "1 Year",
+  },
   },
   {
     id: 2,
@@ -24,8 +41,25 @@ const products = [
     reviews: 318,
     ai: false,
     favorite: false,
-    image:
-      "https://images.unsplash.com/photo-1527814050087-3793815479db?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700",
+      "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=700",
+      "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?w=700",
+      "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=700",
+    ],
+    specifications: {
+    Brand: "Sony",
+    Model: "WH-1000XM5",
+    Color: "Black",
+    Battery: "30 Hours",
+    Bluetooth: "5.3",
+    Weight: "250 g",
+    Driver: "30 mm",
+    Microphone: "Built-in",
+    NoiseCancellation: "Active",
+    Charging: "USB Type-C",
+    Warranty: "1 Year",
+  },
   },
   {
     id: 3,
@@ -38,8 +72,25 @@ const products = [
     reviews: 504,
     ai: true,
     favorite: false,
-    image:
-      "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700",
+      "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=700",
+      "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?w=700",
+      "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=700"
+    ],
+    specifications: {
+    Brand: "Sony",
+    Model: "WH-1000XM5",
+    Color: "Black",
+    Battery: "30 Hours",
+    Bluetooth: "5.3",
+    Weight: "250 g",
+    Driver: "30 mm",
+    Microphone: "Built-in",
+    NoiseCancellation: "Active",
+    Charging: "USB Type-C",
+    Warranty: "1 Year",
+  },
   },
   {
     id: 4,
@@ -52,8 +103,25 @@ const products = [
     reviews: 189,
     ai: false,
     favorite: false,
-    image:
-      "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700",
+      "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=700",
+      "https://images.unsplash.com/photo-1518444065439-e933c06ce9cd?w=700",
+      "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=700"
+    ],
+    specifications: {
+    Brand: "Sony",
+    Model: "WH-1000XM5",
+    Color: "Black",
+    Battery: "30 Hours",
+    Bluetooth: "5.3",
+    Weight: "250 g",
+    Driver: "30 mm",
+    Microphone: "Built-in",
+    NoiseCancellation: "Active",
+    Charging: "USB Type-C",
+    Warranty: "1 Year",
+  },
   },
 ];
 

@@ -10,7 +10,7 @@ function FeaturedProducts({
   handleCompare,
 }) {
   return (
-    <section className="featured">
+    <section id="products" className="featured">
       <h1>🔥 Featured Products</h1>
 
       <div className="products-grid">

@@ -1,14 +1,11 @@
 import "../styles/Navbar.css";
+import { NavLink } from "react-router-dom";
 import { FaHeart, FaShoppingCart, FaUserCircle } from "react-icons/fa";
 
-import { Link, NavLink } from "react-router-dom";
-
-function Navbar({ search, setSearch, cartCount }) {
+function Navbar({ search, setSearch, cartCount, wishlistCount }) {
   return (
     <nav className="navbar">
-      <Link to="/" className="logo">
-        🛍 SmartCommerce
-      </Link>
+      <div className="logo">🛍️ SmartCommerce</div>
 
       <input
         className="search"
@@ -20,24 +17,29 @@ function Navbar({ search, setSearch, cartCount }) {
 
       <div className="nav-links">
         <NavLink to="/">Home</NavLink>
-
         <NavLink to="/products">Products</NavLink>
-
         <NavLink to="/about">About</NavLink>
-
         <NavLink to="/contact">Contact</NavLink>
       </div>
 
       <div className="nav-icons">
-        <NavLink to="/wishlist">
-          <FaHeart />
-        </NavLink>
+        <div className="wishlist-container">
+          <NavLink to="/wishlist">
+            <FaHeart />
+          </NavLink>
 
-        <NavLink to="/cart" className="cart-container">
-          <FaShoppingCart />
+          {wishlistCount > 0 && (
+            <span className="wishlist-badge">{wishlistCount}</span>
+          )}
+        </div>
+
+        <div className="cart-container">
+          <NavLink to="/cart">
+            <FaShoppingCart />
+          </NavLink>
 
           {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-        </NavLink>
+        </div>
 
         <NavLink to="/profile">
           <FaUserCircle />

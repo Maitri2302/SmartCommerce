@@ -23,7 +23,7 @@ function QuickView({ product, close, addToCart }) {
         <button
           className="buy-btn"
           onClick={() => {
-            addToCart();
+            addToCart(product);
 
             close();
           }}
