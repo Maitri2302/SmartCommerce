@@ -25,7 +25,7 @@ function ProductDetails({ products, addToCart, toggleWishlist }) {
           <img className="main-image" src={selectedImage} alt={product.name} />
 
           <div className="thumbnail-container">
-            {(product.images || [product.image]).map((img, index) => (
+            {(product.images ?? [product.image]).map((img, index) => (
               <img
                 key={index}
                 src={img}
@@ -80,7 +80,7 @@ function ProductDetails({ products, addToCart, toggleWishlist }) {
           </div>
         </div>
       </div>
-      <ProductSpecifications specifications={product.specifications} />
+      <ProductSpecifications specifications={product.specifications || {}} />
       <CustomerReviews />
       <RelatedProducts products={products} currentProduct={product} />
     </div>

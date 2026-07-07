@@ -14,6 +14,7 @@ import Contact from "./pages/Contact";
 import ProductDetails from "./pages/ProductDetails";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const [products, setProducts] = useState(productsData);
@@ -93,9 +94,11 @@ function App() {
       return;
     }
 
-    if (compareProducts.length < 2) {
-      setCompareProducts((prev) => [...prev, product]);
+    if (compareProducts.length >= 2) {
+      alert("You can compare only two products.");
+      return;
     }
+    setCompareProducts([...compareProducts, product]);
   }
 
   const filteredProducts = products.filter((product) => {
@@ -105,18 +108,14 @@ function App() {
 
     const categoryMatch =
       selectedCategory === "All" || product.category === selectedCategory;
-
     return searchMatch && categoryMatch;
   });
 
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
   return (
     <BrowserRouter>
-      <Navbar
-        search={search}
-        setSearch={setSearch}
-        cartCount={cartItems.length}
-        wishlistCount={wishlistItems.length}
-      />
+      <Navbar search={search} setSearch={setSearch} cartCount={cartCount} />
 
       <Routes>
         <Route
@@ -187,16 +186,6 @@ function App() {
           }
         />
         <Route
-          path="/product/:id"
-          element={
-            <ProductDetails
-              products={products}
-              addToCart={addToCart}
-              toggleWishlist={toggleWishlist}
-            />
-          }
-        />
-        <Route
           path="/checkout"
           element={
             <Checkout cartItems={cartItems} setCartItems={setCartItems} />
@@ -204,6 +193,7 @@ function App() {
         />
 
         <Route path="/order-success" element={<OrderSuccess />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

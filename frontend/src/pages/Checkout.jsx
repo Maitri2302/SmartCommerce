@@ -3,10 +3,17 @@ import "../styles/Checkout.css";
 
 function Checkout({ cartItems, setCartItems }) {
   const navigate = useNavigate();
+  if (cartItems.length === 0) {
+    return (
+      <div className="checkout-page">
+        <h1>Your cart is empty.</h1>
+      </div>
+    );
+  }
 
   const total = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0
+    0,
   );
 
   function placeOrder() {
@@ -54,9 +61,7 @@ function Checkout({ cartItems, setCartItems }) {
 
           <h2>Total: ₹{total}</h2>
 
-          <button onClick={placeOrder}>
-            Place Order
-          </button>
+          <button onClick={placeOrder}>Place Order</button>
         </div>
       </div>
     </div>

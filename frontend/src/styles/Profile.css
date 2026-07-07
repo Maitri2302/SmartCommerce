@@ -1,0 +1,59 @@
+.profile-page {
+  width: 90%;
+  max-width: 1100px;
+  margin: 40px auto;
+  display: grid;
+  gap: 30px;
+}
+
+.profile-card,
+.orders-card,
+.address-card,
+.account-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 5px 20px rgba(0,0,0,.08);
+}
+
+.profile-card h1,
+.orders-card h2,
+.address-card h2,
+.account-card h2 {
+  margin-bottom: 20px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 18px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.account-card button {
+  margin-right: 15px;
+  margin-top: 15px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.account-card button:hover {
+  background: #1d4ed8;
+}
+
+.logout {
+  background: #dc2626 !important;
+}
+
+.logout:hover {
+  background: #b91c1c !important;
+}
