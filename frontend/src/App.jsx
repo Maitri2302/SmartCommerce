@@ -115,7 +115,12 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Navbar search={search} setSearch={setSearch} cartCount={cartCount} />
+      <Navbar
+        search={search}
+        setSearch={setSearch}
+        cartCount={cartCount}
+        wishlistCount={wishlistItems.length}
+      />
 
       <Routes>
         <Route

@@ -33,13 +33,15 @@ function ProductCard({
         style={{ cursor: "pointer" }}
       />
 
-      {product.ai && (
-        <span className="ai-tag">🤖 AI Pick</span>
-      )}
+      <div className="ai-tag-wrapper">
+        {product.ai && (
+          <span className="ai-tag">🤖 AI Pick</span>
+        )}
+      </div>
 
       <h3>{product.name}</h3>
 
-      <p>
+      <p className="rating">
         ⭐ {product.rating}
         <span className="reviews">
           ({product.reviews})
@@ -56,30 +58,32 @@ function ProductCard({
         </span>
       </div>
 
-      <div className="buttons">
-        <button
-          className="cart"
-          onClick={() => addToCart(product)}
-        >
-          Add to Cart
-        </button>
+      <div className="card-actions">
+        <div className="buttons">
+          <button
+            className="cart"
+            onClick={() => addToCart(product)}
+          >
+            Add to Cart
+          </button>
+
+          <button
+            className="view"
+            onClick={() => navigate(`/product/${product.id}`)}
+          >
+            View Details
+          </button>
+        </div>
 
         <button
-          className="view"
-          onClick={() => navigate(`/product/${product.id}`)}
+          className="compare-btn"
+          onClick={() => handleCompare(product)}
         >
-          View Details
+          {compareProducts.find((p) => p.id === product.id)
+            ? "✓ Selected"
+            : "Compare"}
         </button>
       </div>
-
-      <button
-        className="compare-btn"
-        onClick={() => handleCompare(product)}
-      >
-        {compareProducts.find((p) => p.id === product.id)
-          ? "✓ Selected"
-          : "Compare"}
-      </button>
     </div>
   );
 }
