@@ -18,6 +18,24 @@ function CompareProducts({ products }) {
           </tr>
 
           <tr>
+            <td>Image</td>
+            <td>
+              <img
+                src={p1.images?.[0] || p1.image}
+                alt={p1.name}
+                style={{ width: "70px", height: "70px", objectFit: "cover", margin: "0 auto", borderRadius: "8px" }}
+              />
+            </td>
+            <td>
+              <img
+                src={p2.images?.[0] || p2.image}
+                alt={p2.name}
+                style={{ width: "70px", height: "70px", objectFit: "cover", margin: "0 auto", borderRadius: "8px" }}
+              />
+            </td>
+          </tr>
+
+          <tr>
             <td>Price</td>
             <td>₹{p1.price}</td>
             <td>₹{p2.price}</td>

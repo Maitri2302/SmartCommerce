@@ -16,7 +16,7 @@ function Wishlist({ wishlistItems, addToCart, toggleWishlist }) {
 
       {wishlistItems.map((item) => (
         <div className="wishlist-item" key={item.id}>
-          <img src={item.image} alt={item.name} />
+          <img src={item.images?.[0] || item.image} alt={item.name} />
 
           <div className="wishlist-info">
             <h2>{item.name}</h2>

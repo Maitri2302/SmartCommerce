@@ -25,7 +25,7 @@ function RelatedProducts({ products, currentProduct }) {
             className="related-card"
             onClick={() => navigate(`/product/${product.id}`)}
           >
-            <img src={product.image} alt={product.name} />
+            <img src={product.images?.[0] || product.image} alt={product.name} />
 
             <h3>{product.name}</h3>
 

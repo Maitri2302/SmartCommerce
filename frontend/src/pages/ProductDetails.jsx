@@ -10,9 +10,16 @@ function ProductDetails({ products, addToCart, toggleWishlist }) {
 
   const product = products.find((p) => p.id === Number(id));
 
-  const [selectedImage, setSelectedImage] = useState(
-    product?.images?.[0] || product?.image || "",
-  );
+  const [userSelectedImage, setUserSelectedImage] = useState(null);
+  const [prevId, setPrevId] = useState(id);
+
+  if (prevId !== id) {
+    setPrevId(id);
+    setUserSelectedImage(null);
+  }
+
+  const selectedImage =
+    userSelectedImage || product?.images?.[0] || product?.image || "";
 
   if (!product) {
     return <h1>Product not found.</h1>;
@@ -25,13 +32,13 @@ function ProductDetails({ products, addToCart, toggleWishlist }) {
           <img className="main-image" src={selectedImage} alt={product.name} />
 
           <div className="thumbnail-container">
-            {(product.images ?? [product.image]).map((img, index) => (
+            {(product.images?.length ? product.images : (product.image ? [product.image] : [])).map((img, index) => (
               <img
                 key={index}
                 src={img}
                 alt={`Thumbnail ${index + 1}`}
                 className={`thumbnail ${selectedImage === img ? "active" : ""}`}
-                onClick={() => setSelectedImage(img)}
+                onClick={() => setUserSelectedImage(img)}
               />
             ))}
           </div>

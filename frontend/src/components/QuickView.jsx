@@ -10,7 +10,7 @@ function QuickView({ product, close, addToCart }) {
           ✖
         </button>
 
-        <img src={product.image} alt={product.name} />
+        <img src={product.images?.[0] || product.image} alt={product.name} />
 
         <h2>{product.name}</h2>
 

@@ -27,7 +27,7 @@ function ProductCard({
       </div>
 
       <img
-        src={product.image}
+        src={product.images?.[0] || product.image}
         alt={product.name}
         onClick={() => navigate(`/product/${product.id}`)}
         style={{ cursor: "pointer" }}
