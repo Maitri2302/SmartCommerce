@@ -1,8 +1,11 @@
 import "../styles/Navbar.css";
 import { NavLink } from "react-router-dom";
 import { FaHeart, FaShoppingCart, FaUserCircle } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar({ search, setSearch, cartCount, wishlistCount }) {
+  const { user, isAuthenticated } = useAuth();
+
   return (
     <nav className="navbar">
       <div className="logo">🛍️ SmartCommerce</div>
@@ -41,9 +44,16 @@ function Navbar({ search, setSearch, cartCount, wishlistCount }) {
           {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
         </div>
 
-        <NavLink to="/profile">
-          <FaUserCircle />
-        </NavLink>
+        {isAuthenticated ? (
+          <NavLink to="/profile" title={user?.name} className="user-nav-link">
+            <FaUserCircle />
+            <span className="user-nav-name">{user?.name?.split(" ")[0]}</span>
+          </NavLink>
+        ) : (
+          <NavLink to="/login" className="login-btn-nav">
+            Sign In
+          </NavLink>
+        )}
       </div>
     </nav>
   );

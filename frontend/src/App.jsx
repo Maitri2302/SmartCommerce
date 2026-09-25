@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
-import productsData from "./data/products";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -9,6 +8,7 @@ import Products from "./pages/Products";
 import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
 import Profile from "./pages/Profile";
+import Login from "./pages/Login";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import ProductDetails from "./pages/ProductDetails";
@@ -17,7 +17,9 @@ import OrderSuccess from "./pages/OrderSuccess";
 import NotFound from "./pages/NotFound";
 
 function App() {
-  const [products, setProducts] = useState(productsData);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [cartItems, setCartItems] = useState([]);
   const [showAI, setShowAI] = useState(false);
@@ -25,6 +27,29 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [compareProducts, setCompareProducts] = useState([]);
   const [wishlistItems, setWishlistItems] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/products");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+
+        const data = await response.json();
+
+        setProducts(data);
+      } catch (err) {
+        console.error(err);
+        setError("Unable to load products.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   function addToCart(product) {
     const exists = cartItems.find((item) => item.id === product.id);
@@ -113,6 +138,58 @@ function App() {
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          fontSize: "20px",
+          fontWeight: "500",
+          color: "#2563eb",
+          fontFamily: "'Poppins', sans-serif",
+        }}
+      >
+        🛍️ Loading SmartCommerce products...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          gap: "14px",
+          fontFamily: "'Poppins', sans-serif",
+        }}
+      >
+        <h2 style={{ color: "#ef4444" }}>⚠️ {error}</h2>
+        <p style={{ color: "#666" }}>
+          Ensure the backend server is running at <code>http://localhost:5000</code>.
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          style={{
+            padding: "10px 24px",
+            background: "#2563eb",
+            color: "white",
+            borderRadius: "8px",
+            fontSize: "15px",
+          }}
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
   return (
     <BrowserRouter>
       <Navbar
@@ -178,6 +255,7 @@ function App() {
           }
         />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route

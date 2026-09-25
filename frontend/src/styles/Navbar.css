@@ -227,3 +227,32 @@
   justify-content: center;
   align-items: center;
 }
+
+.user-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  color: #2563eb !important;
+}
+
+.user-nav-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.login-btn-nav {
+  padding: 8px 18px;
+  background: #2563eb;
+  color: white !important;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.login-btn-nav:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
