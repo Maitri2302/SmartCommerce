@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { apiFetch } from "../utils/api";
 
 const AuthContext = createContext(null);
 
@@ -7,6 +8,24 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [loading, setLoading] = useState(true);
+
+  const clearAuth = useCallback(() => {
+    localStorage.removeItem("token");
+    setToken("");
+    setUser(null);
+  }, []);
+
+  // Listen for global auth expired events emitted by apiFetch
+  useEffect(() => {
+    const handleAuthExpired = () => {
+      clearAuth();
+    };
+
+    window.addEventListener("auth:expired", handleAuthExpired);
+    return () => {
+      window.removeEventListener("auth:expired", handleAuthExpired);
+    };
+  }, [clearAuth]);
 
   // Load user details if token exists
   useEffect(() => {
@@ -17,45 +36,24 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        const response = await fetch("http://localhost:5000/api/auth/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-        } else {
-          // Token expired or invalid
-          localStorage.removeItem("token");
-          setToken("");
-          setUser(null);
-        }
+        const data = await apiFetch("/api/auth/me");
+        setUser(data.user);
       } catch (err) {
-        console.error("Auth check failed:", err);
+        console.error("Auth check failed:", err.message);
+        clearAuth();
       } finally {
         setLoading(false);
       }
     };
 
     fetchCurrentUser();
-  }, [token]);
+  }, [token, clearAuth]);
 
   const login = async (email, password) => {
-    const response = await fetch("http://localhost:5000/api/auth/login", {
+    const data = await apiFetch("/api/auth/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({ email, password }),
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to log in");
-    }
 
     localStorage.setItem("token", data.token);
     setToken(data.token);
@@ -64,19 +62,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async ({ name, email, password, phone, address }) => {
-    const response = await fetch("http://localhost:5000/api/auth/register", {
+    const data = await apiFetch("/api/auth/register", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({ name, email, password, phone, address }),
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to register");
-    }
 
     localStorage.setItem("token", data.token);
     setToken(data.token);
@@ -86,33 +75,21 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch("http://localhost:5000/api/auth/logout", {
+      await apiFetch("/api/auth/logout", {
         method: "POST",
       });
     } catch (err) {
       console.error("Logout request failed:", err);
     } finally {
-      localStorage.removeItem("token");
-      setToken("");
-      setUser(null);
+      clearAuth();
     }
   };
 
   const updateProfile = async (profileData) => {
-    const response = await fetch("http://localhost:5000/api/auth/profile", {
+    const data = await apiFetch("/api/auth/profile", {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify(profileData),
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to update profile");
-    }
 
     setUser(data.user);
     return data.user;

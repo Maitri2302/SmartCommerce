@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { apiFetch } from "../utils/api";
 import "../styles/Profile.css";
 
 function Profile() {
@@ -30,16 +31,8 @@ function Profile() {
       }
 
       try {
-        const response = await fetch("http://localhost:5000/api/orders/my-orders", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setOrders(data.orders || []);
-        }
+        const data = await apiFetch("/api/orders/my-orders");
+        setOrders(data.orders || []);
       } catch (err) {
         console.error("Failed to load user orders:", err);
       } finally {

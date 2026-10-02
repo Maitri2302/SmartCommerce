@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { apiFetch } from "../utils/api";
 import "../styles/Checkout.css";
 
 function Checkout({ cartItems, setCartItems }) {
   const navigate = useNavigate();
-  const { user, token } = useAuth();
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     fullName: user?.name || "",
@@ -105,24 +106,10 @@ function Checkout({ cartItems, setCartItems }) {
 
     try {
       setPlacingOrder(true);
-      const headers = {
-        "Content-Type": "application/json",
-      };
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
-
-      const response = await fetch("http://localhost:5000/api/orders", {
+      const data = await apiFetch("/api/orders", {
         method: "POST",
-        headers,
         body: JSON.stringify(orderPayload),
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to place order.");
-      }
 
       setCartItems([]);
       navigate("/order-success", { state: { order: data.order } });

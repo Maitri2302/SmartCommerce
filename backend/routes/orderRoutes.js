@@ -9,6 +9,6 @@ const { protect, optionalProtect } = require("../middleware/authMiddleware");
 
 router.post("/", optionalProtect, createOrder);
 router.get("/my-orders", protect, getMyOrders);
-router.get("/:id", getOrderById);
+router.get("/:id", protect, getOrderById);
 
 module.exports = router;
