@@ -12,6 +12,7 @@
   border-radius: 15px;
   margin-bottom: 20px;
   box-shadow: 0 6px 15px rgba(0,0,0,.08);
+  position: relative;
 }
 
 .review-header {
@@ -22,6 +23,8 @@
 
 .review-header h3 {
   margin: 0;
+  font-size: 16px;
+  color: #1e293b;
 }
 
 .review-card p {
@@ -29,3 +32,117 @@
   color: #555;
   line-height: 1.6;
 }
+
+.review-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-date {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.review-delete-btn {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.review-delete-btn:hover {
+  background: #fee2e2;
+}
+
+.review-form-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+}
+
+.review-form-card h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  color: #0f172a;
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group-review {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group-review label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.rating-select {
+  width: 140px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  background: white;
+}
+
+.comment-textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.submit-review-btn {
+  width: fit-content;
+  padding: 10px 24px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submit-review-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.review-notice {
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.review-notice.already {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.review-notice.auth {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}

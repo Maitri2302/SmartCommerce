@@ -11,6 +11,13 @@ function ProductDetails({ products, addToCart, toggleWishlist }) {
   const product = products.find((p) => p.id === Number(id));
 
   const [userSelectedImage, setUserSelectedImage] = useState(null);
+  const [liveRating, setLiveRating] = useState(product?.rating || 0);
+  const [liveReviews, setLiveReviews] = useState(product?.reviews || product?.numReviews || 0);
+
+  const handleReviewUpdate = ({ rating, reviews }) => {
+    if (rating !== undefined) setLiveRating(rating);
+    if (reviews !== undefined) setLiveReviews(reviews);
+  };
 
   const selectedImage =
     userSelectedImage || product?.images?.[0] || product?.image || "";
@@ -61,7 +68,7 @@ function ProductDetails({ products, addToCart, toggleWishlist }) {
           <h1>{product.name}</h1>
 
           <h3>
-            ⭐ {product.rating} ({product.reviews} Reviews)
+            ⭐ {liveRating} ({liveReviews} Reviews)
           </h3>
 
           <h2>₹{product.price}</h2>
@@ -101,7 +108,7 @@ function ProductDetails({ products, addToCart, toggleWishlist }) {
         </div>
       </div>
       <ProductSpecifications specifications={product.specifications || {}} />
-      <CustomerReviews />
+      <CustomerReviews productId={product.id || product.productId || product._id} onReviewUpdate={handleReviewUpdate} />
       <RelatedProducts products={products} currentProduct={product} />
     </div>
   );
