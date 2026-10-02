@@ -5,9 +5,9 @@ const {
   getMyOrders,
   getOrderById,
 } = require("../controllers/orderController");
-const { protect, optionalProtect } = require("../middleware/authMiddleware");
+const { protect } = require("../middleware/authMiddleware");
 
-router.post("/", optionalProtect, createOrder);
+router.post("/", protect, createOrder);
 router.get("/my-orders", protect, getMyOrders);
 router.get("/:id", protect, getOrderById);
 

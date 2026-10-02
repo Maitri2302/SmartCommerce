@@ -1,3 +1,47 @@
+.assistant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: #1e293b;
+  color: white;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.assistant-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.clear-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.clear-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.close-btn {
+  background: transparent;
+  color: #94a3b8;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: white;
+}
+
 .messages {
   height: 320px;
   overflow-y: auto;
@@ -5,14 +49,30 @@
   flex-direction: column;
   gap: 12px;
   padding: 15px;
+  background: #f8fafc;
 }
 
 .bot-message {
   align-self: flex-start;
   background: #eef4ff;
+  color: #1e293b;
   padding: 10px 14px;
   border-radius: 12px;
-  max-width: 80%;
+  max-width: 85%;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.bot-error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.bot-loading {
+  font-style: italic;
+  color: #64748b;
 }
 
 .user-message {
@@ -21,20 +81,32 @@
   color: white;
   padding: 10px 14px;
   border-radius: 12px;
-  max-width: 80%;
+  max-width: 85%;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
 }
 
 .chat-input {
   display: flex;
   gap: 10px;
   padding: 15px;
+  background: white;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .chat-input input {
   flex: 1;
   padding: 12px;
   border-radius: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+}
+
+.chat-input input:focus {
+  outline: none;
+  border-color: #2563eb;
 }
 
 .chat-input button {
@@ -43,5 +115,12 @@
   border: none;
   padding: 12px 18px;
   border-radius: 10px;
+  font-weight: 500;
   cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.chat-input button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 
-import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 import { API_BASE_URL, apiFetch } from "./utils/api";
 
 import Home from "./pages/Home";
@@ -29,42 +30,21 @@ function ProductDetailsWrapper({ products, addToCart, toggleWishlist }) {
   );
 }
 
-function App() {
+function AppRoutes() {
+  const navigate = useNavigate();
+  const { token, isAuthenticated } = useAuth();
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
 
-  const [cartItems, setCartItems] = useState(() => {
-    try {
-      const savedCart = localStorage.getItem("smartcommerce_cart");
-      if (savedCart) {
-        const parsed = JSON.parse(savedCart);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (err) {
-      console.error("Failed to restore cart from localStorage:", err);
-    }
-    return [];
-  });
-
+  const [cartItems, setCartItems] = useState([]);
   const [showAI, setShowAI] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [compareProducts, setCompareProducts] = useState([]);
-
-  const [wishlistItems, setWishlistItems] = useState(() => {
-    try {
-      const savedWishlist = localStorage.getItem("smartcommerce_wishlist");
-      if (savedWishlist) {
-        const parsed = JSON.parse(savedWishlist);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch (err) {
-      console.error("Failed to restore wishlist from localStorage:", err);
-    }
-    return [];
-  });
+  const [wishlistItems, setWishlistItems] = useState([]);
 
   const [toastMessage, setToastMessage] = useState("");
 
@@ -74,37 +54,53 @@ function App() {
   };
 
   useEffect(() => {
-    try {
-      localStorage.setItem("smartcommerce_cart", JSON.stringify(cartItems));
-    } catch (err) {
-      console.error("Failed to save cart to localStorage:", err);
-    }
-  }, [cartItems]);
+    const handleLogout = () => {
+      setCartItems([]);
+      setWishlistItems([]);
+      try {
+        localStorage.removeItem("smartcommerce_cart");
+        localStorage.removeItem("smartcommerce_wishlist");
+      } catch (err) {
+        console.error("Failed to clear cart/wishlist storage on logout:", err);
+      }
+    };
 
+    window.addEventListener("auth:logout", handleLogout);
+    window.addEventListener("auth:expired", handleLogout);
+    return () => {
+      window.removeEventListener("auth:logout", handleLogout);
+      window.removeEventListener("auth:expired", handleLogout);
+    };
+  }, []);
+
+  // Sync user-specific cart and wishlist from MongoDB upon authentication
   useEffect(() => {
-    try {
-      localStorage.setItem("smartcommerce_wishlist", JSON.stringify(wishlistItems));
-    } catch (err) {
-      console.error("Failed to save wishlist to localStorage:", err);
-    }
-  }, [wishlistItems]);
+    const loadUserCartAndWishlist = async () => {
+      if (!isAuthenticated || !token) {
+        setCartItems([]);
+        setWishlistItems([]);
+        return;
+      }
+      try {
+        const [cartRes, wishRes] = await Promise.all([
+          apiFetch("/api/users/cart"),
+          apiFetch("/api/users/wishlist"),
+        ]);
+        setCartItems(cartRes.cart || []);
+        setWishlistItems(wishRes.wishlist || []);
+      } catch (err) {
+        console.error("Failed to load user cart/wishlist from MongoDB:", err);
+      }
+    };
+
+    loadUserCartAndWishlist();
+  }, [token, isAuthenticated]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const data = await apiFetch("/api/products");
-        const savedWishlistStr = localStorage.getItem("smartcommerce_wishlist");
-        let currentWishlist = [];
-        try {
-          if (savedWishlistStr) currentWishlist = JSON.parse(savedWishlistStr) || [];
-        } catch {
-          currentWishlist = [];
-        }
-        const syncedProducts = data.map((p) => ({
-          ...p,
-          favorite: currentWishlist.some((w) => w.id === p.id),
-        }));
-        setProducts(syncedProducts);
+        setProducts(data);
       } catch (err) {
         console.error(err);
         setError("Unable to load products.");
@@ -116,64 +112,119 @@ function App() {
     fetchProducts();
   }, []);
 
-  function addToCart(product) {
-    const exists = cartItems.find((item) => item.id === product.id);
+  async function addToCart(product) {
+    if (!isAuthenticated && !token) {
+      showToast("Please sign in to add items to your cart.");
+      navigate("/login", { state: { from: window.location.pathname } });
+      return;
+    }
 
-    if (exists) {
-      setCartItems(
-        cartItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
-        ),
-      );
-    } else {
-      setCartItems([
-        ...cartItems,
-        {
-          ...product,
+    try {
+      const data = await apiFetch("/api/users/cart", {
+        method: "PUT",
+        body: JSON.stringify({
+          productId: product.id || product.productId || product._id,
           quantity: 1,
-        },
-      ]);
+          action: "add",
+        }),
+      });
+      setCartItems(data.cart || []);
+      showToast(`Added ${product.name} to cart`);
+    } catch (err) {
+      console.error("Failed to add to cart:", err);
+      showToast(err.message || "Failed to update cart");
     }
   }
 
-  function increaseQuantity(id) {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
-      ),
-    );
+  async function increaseQuantity(id) {
+    const item = cartItems.find((i) => i.id === id);
+    if (!item) return;
+    const targetQty = item.quantity + 1;
+
+    try {
+      const data = await apiFetch("/api/users/cart", {
+        method: "PUT",
+        body: JSON.stringify({
+          productId: id,
+          quantity: targetQty,
+          action: "set",
+        }),
+      });
+      setCartItems(data.cart || []);
+    } catch (err) {
+      console.error("Failed to increase quantity:", err);
+      showToast(err.message || "Failed to update quantity");
+    }
   }
 
-  function decreaseQuantity(id) {
-    setCartItems((prev) =>
-      prev
-        .map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item,
-        )
-        .filter((item) => item.quantity > 0),
-    );
+  async function decreaseQuantity(id) {
+    const item = cartItems.find((i) => i.id === id);
+    if (!item) return;
+    const targetQty = item.quantity - 1;
+
+    try {
+      if (targetQty <= 0) {
+        const data = await apiFetch(`/api/users/cart/${id}`, {
+          method: "DELETE",
+        });
+        setCartItems(data.cart || []);
+      } else {
+        const data = await apiFetch("/api/users/cart", {
+          method: "PUT",
+          body: JSON.stringify({
+            productId: id,
+            quantity: targetQty,
+            action: "set",
+          }),
+        });
+        setCartItems(data.cart || []);
+      }
+    } catch (err) {
+      console.error("Failed to decrease quantity:", err);
+      showToast(err.message || "Failed to update quantity");
+    }
   }
 
-  function removeFromCart(id) {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+  async function removeFromCart(id) {
+    try {
+      const data = await apiFetch(`/api/users/cart/${id}`, {
+        method: "DELETE",
+      });
+      setCartItems(data.cart || []);
+    } catch (err) {
+      console.error("Failed to remove item from cart:", err);
+      showToast(err.message || "Failed to remove item");
+    }
   }
 
-  function toggleWishlist(product) {
-    const exists = wishlistItems.find((item) => item.id === product.id);
-
-    if (exists) {
-      setWishlistItems(wishlistItems.filter((item) => item.id !== product.id));
-    } else {
-      setWishlistItems((prev) => [...prev, product]);
+  async function toggleWishlist(product) {
+    if (!isAuthenticated && !token) {
+      showToast("Please sign in to save items to your wishlist.");
+      navigate("/login", { state: { from: window.location.pathname } });
+      return;
     }
 
-    const updated = products.map((p) =>
-      p.id === product.id ? { ...p, favorite: !exists } : p,
-    );
+    const pId = product.id || product.productId || product._id;
+    const exists = wishlistItems.some((item) => item.id === pId);
 
-    setProducts(updated);
+    try {
+      let data;
+      if (exists) {
+        data = await apiFetch(`/api/users/wishlist/${pId}`, {
+          method: "DELETE",
+        });
+      } else {
+        data = await apiFetch(`/api/users/wishlist/${pId}`, {
+          method: "POST",
+        });
+      }
+
+      const updatedWishlist = data.wishlist || [];
+      setWishlistItems(updatedWishlist);
+    } catch (err) {
+      console.error("Failed to update wishlist:", err);
+      showToast(err.message || "Failed to update wishlist");
+    }
   }
 
   function handleCompare(product) {
@@ -191,7 +242,14 @@ function App() {
     setCompareProducts([...compareProducts, product]);
   }
 
-  const filteredProducts = products.filter((product) => {
+  const productsWithFavorite = products.map((product) => ({
+    ...product,
+    favorite: wishlistItems.some(
+      (w) => (w.id || w._id) === (product.id || product._id)
+    ),
+  }));
+
+  const filteredProducts = productsWithFavorite.filter((product) => {
     const searchMatch = product.name
       .toLowerCase()
       .includes(search.toLowerCase());
@@ -256,7 +314,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <>
       {toastMessage && (
         <div
           style={{
@@ -290,7 +348,7 @@ function App() {
           path="/"
           element={
             <Home
-              products={products}
+              products={productsWithFavorite}
               filteredProducts={filteredProducts}
               addToCart={addToCart}
               toggleWishlist={toggleWishlist}
@@ -348,7 +406,7 @@ function App() {
           path="/product/:id"
           element={
             <ProductDetailsWrapper
-              products={products}
+              products={productsWithFavorite}
               addToCart={addToCart}
               toggleWishlist={toggleWishlist}
             />
@@ -364,6 +422,14 @@ function App() {
         <Route path="/order-success" element={<OrderSuccess />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
     </BrowserRouter>
   );
 }

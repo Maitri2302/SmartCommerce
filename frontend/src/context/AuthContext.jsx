@@ -11,6 +11,13 @@ export const AuthProvider = ({ children }) => {
 
   const clearAuth = useCallback(() => {
     localStorage.removeItem("token");
+    try {
+      localStorage.removeItem("smartcommerce_cart");
+      localStorage.removeItem("smartcommerce_wishlist");
+    } catch (err) {
+      console.error("Failed to clear cart/wishlist from storage:", err);
+    }
+    window.dispatchEvent(new Event("auth:logout"));
     setToken("");
     setUser(null);
   }, []);

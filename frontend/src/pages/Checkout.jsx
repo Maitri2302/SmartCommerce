@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { apiFetch } from "../utils/api";
@@ -6,7 +6,13 @@ import "../styles/Checkout.css";
 
 function Checkout({ cartItems, setCartItems }) {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (!isAuthenticated && !localStorage.getItem("token")) {
+      navigate("/login", { state: { from: "/checkout" } });
+    }
+  }, [isAuthenticated, navigate]);
 
   const [formData, setFormData] = useState({
     fullName: user?.name || "",
@@ -19,6 +25,19 @@ function Checkout({ cartItems, setCartItems }) {
   });
   const [error, setError] = useState("");
   const [placingOrder, setPlacingOrder] = useState(false);
+
+  if (!isAuthenticated && !localStorage.getItem("token")) {
+    return (
+      <div className="checkout-page">
+        <div style={{ textAlign: "center", padding: "60px 20px" }}>
+          <h1>🔒 Authentication Required</h1>
+          <p style={{ margin: "16px 0", color: "#64748b" }}>
+            Redirecting to sign in...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (cartItems.length === 0) {
     return (

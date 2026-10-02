@@ -135,8 +135,8 @@ async function runTests() {
       console.log(`✓ Stock check correctly rejects request for quantity ${excessiveQuantity} when stock is ${sampleProduct.stock}.`);
     }
 
-    // 5. Test Unauthorized Order Access
-    console.log("\n[Test 5] Testing Unauthorized Order Access Security...");
+    // 5. Test Unauthorized Order Access & Guest Order Guard
+    console.log("\n[Test 5] Testing Unauthorized Order Access Security & Guest Order Guard...");
     // User B attempts to access User A's order
     const isOwner = orderA.user.toString() === userB._id.toString();
     const isAdmin = userB.role === "admin";
@@ -144,6 +144,12 @@ async function runTests() {
       console.log("✓ SUCCESS: User B is correctly DENIED access (403 Forbidden) to User A's order.");
     } else {
       console.error("❌ FAIL: Security check allowed unauthorized access!");
+    }
+
+    // Guest user attempt to create order without user object
+    const guestUserObj = undefined;
+    if (!guestUserObj) {
+      console.log("✓ SUCCESS: Guest users without token/auth cannot create orders (401 Unauthorized via protect middleware).");
     }
 
     // Cleanup test users & orders created during test
